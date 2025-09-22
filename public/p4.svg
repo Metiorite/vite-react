@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="200" height="150" viewBox="0 0 200 150" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="200" height="150" fill="#0f0f23" rx="10"/>
+  <rect x="10" y="10" width="180" height="130" fill="#1e1e2e" rx="5"/>
+  <circle cx="100" cy="75" r="30" fill="#89b4fa"/>
+  <text x="100" y="120" text-anchor="middle" fill="white" font-family="Arial" font-size="10">Project Image</text>
+</svg>
