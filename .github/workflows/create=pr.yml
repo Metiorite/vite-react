@@ -1,0 +1,279 @@
+name: Create match-landing-to-adrian-portfolio PR
+
+on:
+  workflow_dispatch:
+
+jobs:
+  create-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Create branch
+        run: |
+          git checkout -b match-landing-to-adrian-portfolio
+
+      - name: Write new files
+        run: |
+          mkdir -p public src src/components src/assets
+
+          cat > public/index.html <<'EOF'
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Portfolio — Metiorite</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
+EOF
+
+          cat > src/main.jsx <<'EOF'
+import React from 'react'
+import { createRoot } from 'react-dom/client'
+import './index.css'
+import App from './App.jsx'
+
+createRoot(document.getElementById('root')).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+)
+EOF
+
+          cat > src/App.jsx <<'EOF'
+import React from 'react'
+import Header from './components/Header'
+import Hero from './components/Hero'
+import About from './components/About'
+import Projects from './components/Projects'
+import Contact from './components/Contact'
+import Footer from './components/Footer'
+
+export default function App() {
+  return (
+    <div className="min-h-screen bg-gray-50 text-gray-900">
+      <Header />
+      <main className="max-w-5xl mx-auto px-6 py-12">
+        <Hero />
+        <About />
+        <Projects />
+        <Contact />
+      </main>
+      <Footer />
+    </div>
+  )
+}
+EOF
+
+          cat > src/index.css <<'EOF'
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom small utilities to mimic layout */
+html, body, #root { height: 100%; }
+body { -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; }
+
+.section-title {
+  @apply text-2xl font-semibold text-gray-800 mb-4;
+}
+.card {
+  @apply bg-white rounded-lg shadow-sm p-6;
+}
+.avatar {
+  width: 96px;
+  height: 96px;
+  border-radius: 9999px;
+  object-fit: cover;
+  border: 4px solid rgba(59,130,246,0.10);
+}
+EOF
+
+          cat > tailwind.config.cjs <<'EOF'
+module.exports = {
+  content: [
+    "./index.html",
+    "./src/**/*.{js,jsx,ts,tsx}",
+  ],
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+}
+EOF
+
+          cat > postcss.config.cjs <<'EOF'
+module.exports = {
+  plugins: {
+    tailwindcss: {},
+    autoprefixer: {},
+  },
+}
+EOF
+
+          cat > src/components/Header.jsx <<'EOF'
+import React from 'react'
+
+export default function Header() {
+  return (
+    <header className="bg-white shadow-sm">
+      <div className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
+        <div className="text-xl font-bold text-indigo-600">Metiorite</div>
+        <nav className="space-x-6 text-sm text-gray-700">
+          <a href="#about" className="hover:text-indigo-600">About</a>
+          <a href="#projects" className="hover:text-indigo-600">Projects</a>
+          <a href="#contact" className="hover:text-indigo-600">Contact</a>
+        </nav>
+      </div>
+    </header>
+  )
+}
+EOF
+
+          cat > src/components/Hero.jsx <<'EOF'
+import React from 'react'
+import Avatar from '../assets/avatar.svg'
+
+export default function Hero() {
+  return (
+    <section className="flex items-center gap-8 py-12">
+      <img src={Avatar} alt="avatar" className="avatar" />
+      <div>
+        <h1 className="text-4xl font-extrabold text-gray-900 mb-2">Hi — I'm Adrian-like Dev</h1>
+        <p className="text-lg text-gray-700 max-w-2xl">
+          I build delightful web apps and user interfaces. This demo replicates the layout and visual
+          structure of a portfolio landing page so you can replace content/assets freely.
+        </p>
+      </div>
+    </section>
+  )
+}
+EOF
+
+          cat > src/components/About.jsx <<'EOF'
+import React from 'react'
+
+export default function About() {
+  return (
+    <section id="about" className="py-10">
+      <h2 className="section-title">About</h2>
+      <div className="card">
+        <p className="text-gray-700">
+          A concise about section that explains who you are, what you do, and the technologies you use.
+          Replace this text with your personal summary.
+        </p>
+      </div>
+    </section>
+  )
+}
+EOF
+
+          cat > src/components/Projects.jsx <<'EOF'
+import React from 'react'
+
+const demoProjects = [
+  { title: 'Project One', description: 'Short description of project one.' },
+  { title: 'Project Two', description: 'Short description of project two.' },
+  { title: 'Project Three', description: 'Short description of project three.' },
+]
+
+export default function Projects() {
+  return (
+    <section id="projects" className="py-10">
+      <h2 className="section-title">Selected Projects</h2>
+      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {demoProjects.map((p, i) => (
+          <article key={i} className="card">
+            <h3 className="font-semibold text-lg mb-2">{p.title}</h3>
+            <p className="text-gray-600">{p.description}</p>
+          </article>
+        ))}
+      </div>
+    </section>
+  )
+}
+EOF
+
+          cat > src/components/Contact.jsx <<'EOF'
+import React from 'react'
+
+export default function Contact() {
+  return (
+    <section id="contact" className="py-10">
+      <h2 className="section-title">Contact</h2>
+      <div className="card">
+        <p className="text-gray-700 mb-4">Want to work together or ask a question? Reach out over email or socials.</p>
+        <a className="inline-block rounded-md bg-indigo-600 text-white px-4 py-2" href="mailto:hello@example.com">Say hello</a>
+      </div>
+    </section>
+  )
+}
+EOF
+
+          cat > src/components/Footer.jsx <<'EOF'
+import React from 'react'
+
+export default function Footer() {
+  return (
+    <footer className="mt-12 py-6 bg-white border-t">
+      <div className="max-w-5xl mx-auto px-6 text-sm text-gray-600">
+        © {new Date().getFullYear()} Metiorite. Built with React and Tailwind.
+      </div>
+    </footer>
+  )
+}
+EOF
+
+          cat > src/assets/avatar.svg <<'EOF'
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none">
+  <rect width="120" height="120" rx="20" fill="#eef2ff"/>
+  <g transform="translate(12,12)">
+    <circle cx="48" cy="36" r="20" fill="#c7d2fe"/>
+    <rect x="8" y="72" width="80" height="28" rx="8" fill="#a78bfa"/>
+  </g>
+</svg>
+EOF
+
+      - name: Commit changes
+        run: |
+          git add .
+          git commit -m "Add landing page components and Tailwind config (match adrianhajdin/portfolio layout)" || echo "No changes to commit"
+
+      - name: Create pull request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: Add landing page components and Tailwind config (match adrianhajdin/portfolio layout)
+          committer: GitHub <noreply@github.com>
+          author: Metiorite <noreply@github.com>
+          title: Match landing page to adrianhajdin/portfolio
+          body: |
+            This PR adds a landing page layout that matches the visual structure of adrianhajdin/portfolio.
+            Files added: public/index.html, src/{main.jsx,App.jsx,index.css}, tailwind.config.cjs, postcss.config.cjs, src/components/*, src/assets/avatar.svg.
+
+            Notes:
+            - Do not modify package.json in this PR. To install dependencies locally:
+              npm install framer-motion react-icons typewriter-effect
+              npm install -D tailwindcss postcss autoprefixer
+              Optional: npx tailwindcss init -p
+
+            Verification:
+            - git checkout match-landing-to-adrian-portfolio
+            - npm install
+            - npm run dev
+            - Open http://localhost:5173
+          base: main
+          branch: match-landing-to-adrian-portfolio
